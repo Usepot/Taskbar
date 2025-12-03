@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +28,7 @@ import com.farmerbb.taskbar.helper.DesktopModeInputController;
 import com.farmerbb.taskbar.util.U;
 
 import static com.farmerbb.taskbar.util.Constants.PREF_DESKTOP_INPUT;
+import static com.farmerbb.taskbar.util.Constants.PREF_DESKTOP_GYRO;
 
 public class TrackpadActivity extends AppCompatActivity {
 
@@ -54,17 +56,20 @@ public class TrackpadActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if(!U.getSharedPreferences(this).getBoolean(PREF_DESKTOP_INPUT, true) || !U.isDesktopModeActive(this)) {
+        SharedPreferences pref = U.getSharedPreferences(this);
+        if(!pref.getBoolean(PREF_DESKTOP_INPUT, true) || !U.isDesktopModeActive(this)) {
             finish();
             return;
         }
 
         controller.attachTouchpadFullscreen(this, root);
+        controller.setGyroEnabled(this, pref.getBoolean(PREF_DESKTOP_GYRO, false));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        controller.setGyroEnabled(this, false);
         controller.detachTouchpad();
     }
 }

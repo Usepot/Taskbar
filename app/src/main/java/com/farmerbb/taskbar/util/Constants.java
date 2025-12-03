@@ -119,6 +119,7 @@ public class Constants {
     public static final String PREF_DESKTOP_MODE = "desktop_mode";
     public static final String PREF_DESKTOP_MODE_IME_FIX = "desktop_mode_ime_fix";
     public static final String PREF_DESKTOP_INPUT = "desktop_input";
+    public static final String PREF_DESKTOP_GYRO = "desktop_gyro";
     public static final String PREF_OPEN_TRACKPAD = "open_trackpad";
     public static final String PREF_DIM_SCREEN = "dim_screen";
     public static final String PREF_DISABLE_ANIMATIONS = "disable_animations";
@@ -246,6 +247,7 @@ public class Constants {
     public static final String PREF_START_BUTTON_IMAGE_APP_LOGO = "app_logo";
     public static final String PREF_START_BUTTON_IMAGE_CUSTOM  = "custom";
     public static final String PREF_START_BUTTON_IMAGE_DEFAULT = "default";
+
 
     // TaskbarPosition values
 

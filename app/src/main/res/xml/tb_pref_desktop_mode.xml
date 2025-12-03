@@ -47,6 +47,13 @@
         android:summary="@string/tb_pref_desktop_input_summary"
         android:dependency="desktop_mode"/>
 
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="desktop_gyro"
+        android:title="@string/tb_pref_desktop_gyro_title"
+        android:summary="@string/tb_pref_desktop_gyro_summary"
+        android:dependency="desktop_input"/>
+
     <Preference
         android:key="open_trackpad"
         android:title="@string/tb_pref_open_trackpad"

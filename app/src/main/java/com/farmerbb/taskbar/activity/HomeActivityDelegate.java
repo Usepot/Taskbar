@@ -1150,6 +1150,7 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
     private void updateDesktopModeInputUi() {
         SharedPreferences pref = U.getSharedPreferences(this);
         boolean desktopInputEnabled = pref.getBoolean(PREF_DESKTOP_INPUT, true);
+        boolean gyroEnabled = pref.getBoolean(PREF_DESKTOP_GYRO, false);
 
         if(isSecondaryHome) {
             if(U.isDesktopModeActive(this) && !isTaskVirtualDisplay && desktopInputEnabled) {
@@ -1162,6 +1163,8 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
                 desktopModeInputController.attachTouchpad(this, layout);
             else
                 desktopModeInputController.detachTouchpad();
+
+            desktopModeInputController.setGyroEnabled(this, U.isDesktopModeActive(this) && desktopInputEnabled && gyroEnabled);
         }
     }
 

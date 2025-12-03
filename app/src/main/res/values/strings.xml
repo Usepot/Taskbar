@@ -464,6 +464,8 @@
     <string name="tb_desktop_mode_is_active">Desktop mode is active</string>
     <string name="tb_pref_desktop_input_title">Desktop trackpad and cursor</string>
     <string name="tb_pref_desktop_input_summary">Show a touchpad on your phone to move a cursor on the external display while in desktop mode</string>
+    <string name="tb_pref_desktop_gyro_title">Gyroscopic cursor</string>
+    <string name="tb_pref_desktop_gyro_summary">Tilt your phone to move the desktop cursor instead of dragging on the touchpad</string>
     <string name="tb_pref_open_trackpad">Open full-screen trackpad</string>
     <string name="tb_pref_open_trackpad_summary">Launch a dedicated trackpad screen on your phone while desktop mode is active</string>
     <string name="tb_touchpad_label">Touchpad</string>
