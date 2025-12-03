@@ -18,6 +18,7 @@ package com.farmerbb.taskbar.activity;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.ActivityOptions;
 import android.app.WallpaperManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -54,6 +55,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.farmerbb.taskbar.R;
+import com.farmerbb.taskbar.helper.DesktopModeInputController;
 import com.farmerbb.taskbar.helper.DisplayHelper;
 import com.farmerbb.taskbar.helper.GlobalHelper;
 import com.farmerbb.taskbar.util.Callbacks;
@@ -115,6 +117,8 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
     private boolean isTaskVirtualDisplay;
 
     private GestureDetector detector;
+    private final DesktopModeInputController desktopModeInputController = DesktopModeInputController.getInstance();
+    private boolean launchedTrackpadActivity;
 
     private final BroadcastReceiver killReceiver = new BroadcastReceiver() {
         @Override
@@ -322,6 +326,10 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
         }
 
         layout.setFitsSystemWindows(true);
+        if(isSecondaryHome) {
+            layout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
+                    desktopModeInputController.updateCursorBounds(HomeActivityDelegate.this));
+        }
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P 
                 && isDesktopIconsEnabled
@@ -485,6 +493,7 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
 
         U.sendBroadcast(this, ACTION_HIDE_START_MENU);
         init();
+        updateDesktopModeInputUi();
     }
 
     private void init() {
@@ -541,6 +550,8 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
             taskbarController.onCreateHost(this);
             startMenuController.onCreateHost(this);
             dashboardController.onCreateHost(this);
+
+            launchTrackpadIfNeeded();
         } else {
             // We always start the Taskbar and Start Menu services, even if the app isn't normally running
             try {
@@ -581,6 +592,7 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
                 if(dashboardController != null) dashboardController.onDestroyHost(this);
 
                 U.clearCaches(this);
+                launchedTrackpadActivity = false;
 
                 // Stop using HomeActivityDelegate as UI host and restart services if needed
                 if(pref.getBoolean(PREF_TASKBAR_ACTIVE, false) && !pref.getBoolean(PREF_IS_HIDDEN, false)) {
@@ -638,6 +650,11 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
             LauncherApps launcherApps = (LauncherApps) getSystemService(LAUNCHER_APPS_SERVICE);
             launcherApps.unregisterCallback(callback);
         }
+
+        if(isSecondaryHome)
+            desktopModeInputController.detachCursor();
+        else
+            desktopModeInputController.detachTouchpad();
     }
 
     @Override
@@ -659,6 +676,7 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
 
             U.clearCaches(this);
             U.stopFreeformHack(this);
+            launchedTrackpadActivity = false;
 
             // Stop using HomeActivityDelegate as UI host and restart services if needed
             SharedPreferences pref = U.getSharedPreferences(this);
@@ -677,6 +695,7 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
 
                 U.clearCaches(this);
                 U.stopFreeformHack(this);
+                launchedTrackpadActivity = false;
             }
         }
 
@@ -1122,8 +1141,48 @@ public class HomeActivityDelegate extends AppCompatActivity implements UIHost {
             init();
         }
 
+        updateDesktopModeInputUi();
+
         overridePendingTransition(0, R.anim.close_anim);
         U.sendBroadcast(this, ACTION_TEMP_SHOW_TASKBAR);
+    }
+
+    private void updateDesktopModeInputUi() {
+        SharedPreferences pref = U.getSharedPreferences(this);
+        boolean desktopInputEnabled = pref.getBoolean(PREF_DESKTOP_INPUT, true);
+
+        if(isSecondaryHome) {
+            if(U.isDesktopModeActive(this) && !isTaskVirtualDisplay && desktopInputEnabled) {
+                desktopModeInputController.attachCursor(this, (WindowManager) getSystemService(WINDOW_SERVICE));
+                desktopModeInputController.updateCursorBounds(this);
+            } else
+                desktopModeInputController.detachCursor();
+        } else {
+            if(U.isDesktopModeActive(this) && desktopInputEnabled)
+                desktopModeInputController.attachTouchpad(this, layout);
+            else
+                desktopModeInputController.detachTouchpad();
+        }
+    }
+
+    private void launchTrackpadIfNeeded() {
+        if(launchedTrackpadActivity) return;
+
+        SharedPreferences pref = U.getSharedPreferences(this);
+        if(!pref.getBoolean(PREF_DESKTOP_INPUT, true) || !U.isDesktopModeActive(this))
+            return;
+
+        try {
+            Intent intent = new Intent(this, TrackpadActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            ActivityOptions options = ActivityOptions.makeBasic();
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                options.setLaunchDisplayId(Display.DEFAULT_DISPLAY);
+
+            startActivity(intent, options.toBundle());
+            launchedTrackpadActivity = true;
+        } catch (Exception ignored) {}
     }
 
     @Override

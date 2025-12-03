@@ -46,4 +46,9 @@
     <dimen name="tb_qs_icon_preview_size">32dp</dimen>
     <dimen name="tb_systray_icon_size">24dp</dimen>
     <dimen name="tb_systray_icon_size_notifications">26dp</dimen>
+    <dimen name="tb_desktop_cursor_size">28dp</dimen>
+    <dimen name="tb_touchpad_width">280dp</dimen>
+    <dimen name="tb_touchpad_height">200dp</dimen>
+    <dimen name="tb_touchpad_margin">24dp</dimen>
+    <dimen name="tb_touchpad_padding">12dp</dimen>
 </resources>

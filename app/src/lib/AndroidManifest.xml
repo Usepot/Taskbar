@@ -89,6 +89,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.TrackpadActivity"
+            android:process=":libtaskbar"
+            android:label="@string/tb_touchpad_label"
+            android:launchMode="singleTop"
+            android:theme="@style/Taskbar.HomeActivity"
+            android:exported="true"/>
+        <activity
             android:name=".activity.ContextMenuActivity"
             android:process=":libtaskbar"
             android:documentLaunchMode="always"

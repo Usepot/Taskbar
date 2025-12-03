@@ -40,6 +40,19 @@
         android:summary="@string/tb_pref_dim_screen_description"
         android:dependency="desktop_mode"/>
 
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="desktop_input"
+        android:title="@string/tb_pref_desktop_input_title"
+        android:summary="@string/tb_pref_desktop_input_summary"
+        android:dependency="desktop_mode"/>
+
+    <Preference
+        android:key="open_trackpad"
+        android:title="@string/tb_pref_open_trackpad"
+        android:summary="@string/tb_pref_open_trackpad_summary"
+        android:dependency="desktop_input"/>
+
     <Preference
         android:key="desktop_mode_ime_fix"
         android:title="@string/tb_desktop_mode_ime_fix_title"

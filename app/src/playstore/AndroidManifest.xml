@@ -153,6 +153,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.TrackpadActivity"
+            android:label="@string/tb_touchpad_label"
+            android:launchMode="singleTop"
+            android:theme="@style/Taskbar.HomeActivity"
+            android:exported="true"/>
+        <activity
             android:name=".activity.HomeActivityDelegate"
             android:label="${appName}"
             android:launchMode="singleTask"

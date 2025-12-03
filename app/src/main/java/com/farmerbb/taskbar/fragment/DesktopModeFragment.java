@@ -79,6 +79,7 @@ public class DesktopModeFragment extends SettingsFragment {
         findPreference(PREF_PRIMARY_LAUNCHER).setOnPreferenceClickListener(this);
         findPreference(PREF_DIM_SCREEN).setOnPreferenceClickListener(this);
         findPreference(PREF_ENABLE_ADDITIONAL_SETTINGS).setOnPreferenceClickListener(this);
+        findPreference(PREF_OPEN_TRACKPAD).setOnPreferenceClickListener(this);
 
         if(!U.isShowHideNavbarSupported()) {
             PreferenceCategory category = (PreferenceCategory) findPreference(PREF_ADDITIONAL_SETTINGS);
@@ -248,6 +249,11 @@ public class DesktopModeFragment extends SettingsFragment {
                     startActivity(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS));
                 } catch (ActivityNotFoundException ignored) {}
 
+                break;
+            case PREF_OPEN_TRACKPAD:
+                try {
+                    startActivity(U.getThemedIntent(getActivity(), com.farmerbb.taskbar.activity.TrackpadActivity.class));
+                } catch (ActivityNotFoundException ignored) {}
                 break;
         }
 
